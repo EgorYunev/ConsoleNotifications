@@ -1,3 +1,4 @@
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,8 +15,24 @@ public class Main {
 class App {
     private static Scanner scan = new Scanner(System.in);
     private static boolean appIsWork = true;
+    private static ArrayList<String> filesDates = new ArrayList<>();
+    private static final File file = new File("resourses/notifications.txt");
     public static void start() {
         System.out.println("======== WELCOME TO YUNYA NOTIFICATIONS!========\n\nAll commands: \nhelp      add     see     close     cancel");
+        try (FileReader f = new FileReader(file)) {
+            StringBuffer sb = new StringBuffer();
+            while (f.ready()) {
+                char c = (char) f.read();
+                if (c == '\n') {
+                    filesDates.add(sb.toString());
+                    sb = new StringBuffer();
+                } else {
+                    sb.append(c);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
     }
 
     public static boolean getAppIsWork() {
@@ -55,6 +72,11 @@ class App {
             return;
         }
         Alarm.getNotificationsArray().add(new Notifications(name, date));
+        try (FileWriter writer = new FileWriter(file, true)) {
+            writer.write(name + "|" + strDate + "\n");
+        } catch (IOException e) {
+            System.out.println("File isn't saved!");
+        }
         System.out.println("New notification created!");
     }
     private static void see() {
