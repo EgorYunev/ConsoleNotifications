@@ -27,6 +27,10 @@ public class App {
         } catch (IOException e) {
             System.out.println("Error");
         }
+        for (int i = 0; i < filesDates.size(); i++) {
+            String[] nameAndDate = filesDates.get(i).split("#");
+            Alarm.getNotificationsArray().add(new Notifications(nameAndDate[0], LocalDateTime.parse(nameAndDate[1], Alarm.formatter)));
+        }
     }
 
     public static boolean getAppIsWork() {
@@ -67,7 +71,7 @@ public class App {
         }
         Alarm.getNotificationsArray().add(new Notifications(name, date));
         try (FileWriter writer = new FileWriter(file, true)) {
-            writer.write(name + "|" + strDate + "\n");
+            writer.write(name + "#" + strDate + "\n");
         } catch (IOException e) {
             System.out.println("File isn't saved!");
         }
@@ -86,5 +90,4 @@ public class App {
         System.out.println("GoodBye!");
         appIsWork = false;
     }
-
 }
