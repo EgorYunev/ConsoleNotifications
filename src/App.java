@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class App {
@@ -29,8 +30,12 @@ public class App {
         }
         for (int i = 0; i < filesDates.size(); i++) {
             String[] nameAndDate = filesDates.get(i).split("#");
-            Alarm.getNotificationsArray().add(new Notifications(nameAndDate[0], LocalDateTime.parse(nameAndDate[1], Alarm.formatter)));
+            Alarm.getNotificationsArray().add(new Notifications(nameAndDate[1], LocalDateTime.parse(nameAndDate[2], Alarm.formatter), Integer.valueOf(nameAndDate[0])));
         }
+    }
+
+    public static File getFile() {
+        return file;
     }
 
     public static boolean getAppIsWork() {
@@ -69,9 +74,9 @@ public class App {
             System.out.println("Incorrect date");
             return;
         }
-        Alarm.getNotificationsArray().add(new Notifications(name, date));
+        Alarm.getNotificationsArray().add(new Notifications(name, date, Notifications.getCount()));
         try (FileWriter writer = new FileWriter(file, true)) {
-            writer.write(name + "#" + strDate + "\n");
+            writer.write(Notifications.getCount() + "#" + name + "#" + strDate + "\n");
         } catch (IOException e) {
             System.out.println("File isn't saved!");
         }
